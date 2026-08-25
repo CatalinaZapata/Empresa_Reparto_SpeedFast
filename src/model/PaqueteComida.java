@@ -1,24 +1,25 @@
 package model;
 
 public class PaqueteComida extends PaqueteBase {
-    private String nombreRepartidor;
-    private String restaurante;
-    private int tiempoPreparacion;
+    protected String restaurante;
 
-    public PaqueteComida(String tipoPedido, int idPedido, String direccionEntrega, String nombreRepartidor, String restaurante, int tiempoPreparacion) {
-        super(tipoPedido, idPedido, direccionEntrega, nombreRepartidor);
+    public PaqueteComida(int idEntrega, String tipoEntrega, String direccionEntrega, double distanciaKm, String restaurante) {
+        super(idEntrega, tipoEntrega, direccionEntrega, distanciaKm);
         this.restaurante = restaurante;
-        this.tiempoPreparacion = tiempoPreparacion;
-        this.nombreRepartidor = nombreRepartidor;
+    }
+
+    public String getRestaurante() { return restaurante;}
+
+    @Override
+    public double calcularTiempoEntrega() {
+        double tiempoEntrega;
+        tiempoEntrega = Math.round(15 + (2 * distanciaKm));
+        return tiempoEntrega;
     }
 
     @Override
-    public void asignarRepartidor(){
-        super.asignarRepartidor();
-        System.out.println("→ Verificando mochila térmica... OK");
-        super.asignarRepartidor(nombreRepartidor);
+    public void mostrarResumen(){
+        super.mostrarResumen();
         System.out.println("→ Restaurante: " + restaurante);
-        System.out.println("→ Tiempo Preparacion: " + tiempoPreparacion + "[min]");
     }
-
 }

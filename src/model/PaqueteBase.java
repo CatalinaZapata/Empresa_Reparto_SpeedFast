@@ -1,31 +1,26 @@
 package model;
 
-public class PaqueteBase {//Clase padre
-    private String tipoPedido;
-    private int idPedido;
-    private String direccionEntrega;
-    private String nombreRepartidor;
+public abstract class PaqueteBase {
+    protected int idEntrega;
+    protected String tipoEntrega;
+    protected String direccionEntrega;
+    protected double distanciaKm;
 
-    public PaqueteBase(String tipoPedido, int idPedido, String direccionEntrega, String nombreRepartidor) {
-        this.tipoPedido = tipoPedido;
-        this.idPedido = idPedido;
+    public PaqueteBase(int idEntrega, String tipoEntrega, String direccionEntrega, double distanciaKm) {
+        this.idEntrega = idEntrega;
+        this.tipoEntrega = tipoEntrega;
         this.direccionEntrega = direccionEntrega;
-        this.nombreRepartidor = nombreRepartidor;
+        this.distanciaKm = distanciaKm;
     }
 
-    public String getTipoPedido() { return tipoPedido;}
-    public int getIdPedido() { return idPedido;}
-    public String getDireccionEntrega() { return direccionEntrega;}
-    public String getNombreRepartidor() { return nombreRepartidor;}
+    public String getTipoEntrega() { return tipoEntrega;}
 
-    public void asignarRepartidor(){
-        System.out.println("\n[Pedido tipo " + tipoPedido + "]");
-        System.out.println("Asignando repartidor...");
-        System.out.println("→ Id del pedido: " + idPedido);
-        System.out.println("→ Dirección de entrega: " + direccionEntrega);
-    }
+    public abstract double calcularTiempoEntrega();//implementado de forma distinta en cada subclase.
 
-    public void asignarRepartidor(String nombreRepartidor){
-        System.out.println("→ Pedido asignado a " + nombreRepartidor);
+    public void mostrarResumen(){
+        System.out.println("\nPedido tipo " + tipoEntrega + " #" + idEntrega);
+        System.out.println("→ Direccion: " + direccionEntrega);
+        System.out.println("→ Distancia: " + distanciaKm + "[km]");
+        System.out.printf("→ Tiempo estimado de entrega: %.0f minutos%n", calcularTiempoEntrega(), " [min]");
     }
 }
