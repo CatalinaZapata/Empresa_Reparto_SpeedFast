@@ -1,14 +1,14 @@
-# 🧠 Formativa Semana 1 - Desarrollo Orientado a Objetos II
+# 🧠 Formativa Semana 2 - Desarrollo Orientado a Objetos II
 
 ---
 
 ## 👤 Autor del proyecto
 - **Nombre completo:**  Catalina Zapata
 - **Carrera:** Analista Programador
-- **Nombre del Proyecto:** Empresa_Reparto_SpeedFast
+- **Nombre del Proyecto:** Empresa_Reparto_SpeedFast_2
 ---
 ## 📘 Descripción general del proyecto
-Este proyecto corresponde a la evaluación Formativa de la semana 1 de la asignatura *Desarrollo Orientado a Objetos II*. Se trata de un sistema orientado a objetos desarrollado en Java, cuyo objetivo es modelar y gestionar la información de la empresa SpeedFast, aplicando los principios de herencia, polimorfismo, sobrescritura y sobrecarga.
+Este proyecto corresponde a la evaluación Formativa de la semana 2 de la asignatura *Desarrollo Orientado a Objetos II*. Se trata de un sistema orientado a objetos desarrollado en Java, cuyo objetivo es modelar y gestionar la información de la empresa SpeedFast, aplicando los principios de herencia, polimorfismo, clase abstracta, sobrescritura y sobrecarga.
 
 El proyecto fue desarrollado a partir de un caso contextualizado, abordando problemáticas reales y proponiendo una solución estructurada, modular y reutilizable.
 
@@ -26,11 +26,15 @@ El proyecto fue desarrollado a partir de un caso contextualizado, abordando prob
 │   ├── 📁 data/
 │   │   └── 📄 GestorPaqueteria          # Gestiona los pedidos y aplica polimorfismo.
 │   │
-│   └── 📁 model/
-│       ├── 📄 PaqueteBase               # Clase base de los pedidos.
-│       ├── 📄 PaqueteComida             # Subclase para pedidos de comida.
-│       ├── 📄 PaqueteEncomienda         # Subclase para pedidos de encomienda.
-│       └── 📄 PaqueteExpress            # Subclase para pedidos Express.
+│   ├── 📁 model/
+│   │   ├── 📄 PaqueteBase               # Clase base de los pedidos.
+│   │   ├── 📄 PaqueteComida             # Subclase para pedidos de comida.
+│   │   ├── 📄 PaqueteEncomienda         # Subclase para pedidos de encomienda.
+│   │   ├─[Main.java](src/app/Main.java)─ 📄 PaqueteExpress            # Subclase para pedidos Express.
+│   │   └── 📄 GestorPaqueteria          # Gestiona los pedidos y aplica polimorfismo.
+│   │
+│   └── 📁 resources/
+│       └── 📄 Paquete.txt               # Archivo de texto que contiene la información.
 │
 └── 📄 README.md                         # Descripción e instrucciones del proyecto.
 ```
@@ -45,9 +49,9 @@ El proyecto fue desarrollado a partir de un caso contextualizado, abordando prob
 
 ---
 
-**Repositorio GitHub:** https://github.com/CatalinaZapata/Empresa_Reparto_SpeedFast.git |
-**Fecha de entrega:** 17/08/2026
+**Repositorio GitHub:** https: https://github.com/CatalinaZapata/Empresa_Reparto_SpeedFast.git |
+**Fecha de entrega:** 24/08/2026
 
 ---
 
-© Duoc UC | Escuela de Informática y Telecomunicaciones | Formativa Semana 1
+© Duoc UC | Escuela de Informática y Telecomunicaciones | Formativa Semana 2

@@ -1,23 +1,27 @@
 package model;
 
 public class PaqueteEncomienda extends PaqueteBase {
-    private String nombreRepartidor;
-    private int peso;
-    private int volumen;
+    protected int peso;
 
-    public PaqueteEncomienda(String tipoPedido, int idPedido, String direccionEntrega, String nombreRepartidor, int peso, int volumen) {
-        super(tipoPedido, idPedido, direccionEntrega, nombreRepartidor);
+    public PaqueteEncomienda(int idEntrega, String tipoEntrega, String direccionEntrega, double distanciaKm, int peso) {
+        super(idEntrega, tipoEntrega, direccionEntrega, distanciaKm);
         this.peso = peso;
-        this.volumen = volumen;
-        this.nombreRepartidor = nombreRepartidor;
+    }
+
+    public int getPeso() {
+        return peso;
     }
 
     @Override
-    public void asignarRepartidor() {
-        super.asignarRepartidor();
-        System.out.println("→ Validando peso y embalaje... OK");
-        super.asignarRepartidor(nombreRepartidor);
-        System.out.println("→ Peso del paquete: " + peso + "[gr]");
-        System.out.println("→ Volumen del paquete: " + volumen + "[Lt]");
+    public double calcularTiempoEntrega() {
+        double tiempoEntrega;
+        tiempoEntrega = Math.round(20 + (1.5 * distanciaKm));
+        return tiempoEntrega;
+    }
+
+    @Override
+    public void mostrarResumen() {
+        super.mostrarResumen();
+        System.out.println("→ Peso: " + peso + " [gr]");
     }
 }

@@ -1,0 +1,9 @@
+1004|Comida|Av. Providencia #456|8.5|La Cocina
+1005|Comida|Av. Matta #789|15.2|El Sabor
+1006|Comida|Av. Grecia #321|5.7|Donde Juan
+1010|Encomienda|Av. Alameda #1234|25.5|150
+1011|Encomienda|Av. Brasil #567|40.2|500
+1012|Encomienda|Av. Independencia #890|12.8|250
+1016|Express|Av. Apoquindo #111|7.5|+56987654321
+1017|Express|Av. Tobalaba #222|14.2|+56976543210
+1018|Express|Av. Bilbao #333|9.8|+56965432109
