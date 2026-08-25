@@ -30,7 +30,7 @@ El proyecto fue desarrollado a partir de un caso contextualizado, abordando prob
 │   │   ├── 📄 PaqueteBase               # Clase base de los pedidos.
 │   │   ├── 📄 PaqueteComida             # Subclase para pedidos de comida.
 │   │   ├── 📄 PaqueteEncomienda         # Subclase para pedidos de encomienda.
-│   │   ├─[Main.java](src/app/Main.java)─ 📄 PaqueteExpress            # Subclase para pedidos Express.
+│   │   ├── 📄 PaqueteExpress            # Subclase para pedidos Express.
 │   │   └── 📄 GestorPaqueteria          # Gestiona los pedidos y aplica polimorfismo.
 │   │
 │   └── 📁 resources/
