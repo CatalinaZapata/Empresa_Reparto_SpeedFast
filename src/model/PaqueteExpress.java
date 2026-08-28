@@ -1,14 +1,9 @@
 package model;
 
 public class PaqueteExpress extends PaqueteBase {
-    protected String contactoReceptor;
-
-    public PaqueteExpress(int idEntrega, String tipoEntrega, String direccionEntrega, double distanciaKm, String contactoReceptor) {
-        super(idEntrega, tipoEntrega, direccionEntrega, distanciaKm);
-        this.contactoReceptor = contactoReceptor;
+    public PaqueteExpress(String tipoEntrega, int idEntrega, String repartidor, String direccionEntrega, double distanciaKm) {
+        super(tipoEntrega, idEntrega, repartidor, direccionEntrega, distanciaKm);
     }
-
-    public String getContactoReceptor() { return contactoReceptor;}
 
     @Override
     public double calcularTiempoEntrega() {
@@ -19,8 +14,18 @@ public class PaqueteExpress extends PaqueteBase {
     }
 
     @Override
+    public void asignarRepartidor() {
+        System.out.println("Asignando repartidor mas cercano...");
+        System.out.println("→ Repartidor asignado: " + repartidor);
+    }
+
+    @Override
     public void mostrarResumen(){
         super.mostrarResumen();
-        System.out.println("→ Contacto receptor: " + contactoReceptor);
+    }
+
+    @Override
+    public String guardarResumen(){
+        return super.guardarResumen();
     }
 }

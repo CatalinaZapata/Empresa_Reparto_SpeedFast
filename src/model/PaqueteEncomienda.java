@@ -1,15 +1,8 @@
 package model;
 
 public class PaqueteEncomienda extends PaqueteBase {
-    protected int peso;
-
-    public PaqueteEncomienda(int idEntrega, String tipoEntrega, String direccionEntrega, double distanciaKm, int peso) {
-        super(idEntrega, tipoEntrega, direccionEntrega, distanciaKm);
-        this.peso = peso;
-    }
-
-    public int getPeso() {
-        return peso;
+    public PaqueteEncomienda(String tipoEntrega, int idEntrega, String repartidor, String direccionEntrega, double distanciaKm) {
+        super(tipoEntrega, idEntrega, repartidor, direccionEntrega, distanciaKm);
     }
 
     @Override
@@ -20,8 +13,18 @@ public class PaqueteEncomienda extends PaqueteBase {
     }
 
     @Override
+    public void asignarRepartidor() {
+        System.out.println("Asignando repartidor con equipo adecuado...");
+        System.out.println("→ Repartidor asignado: " + repartidor);
+    }
+
+    @Override
     public void mostrarResumen() {
         super.mostrarResumen();
-        System.out.println("→ Peso: " + peso + " [gr]");
+    }
+
+    @Override
+    public String guardarResumen(){
+        return super.guardarResumen();
     }
 }

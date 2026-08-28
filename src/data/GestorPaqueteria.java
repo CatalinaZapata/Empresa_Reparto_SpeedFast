@@ -1,69 +1,201 @@
 package data;
 
+import contrato.*;
 import model.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class GestorPaqueteria {
     ArrayList<PaqueteBase> listaPaquetes = new ArrayList<>();
-    private Scanner sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
 
-    public void cargarArchivo(){
+    public void cargarBuffer(){
         try(Scanner lector = new Scanner(new File("src/resources/Paquete.txt"))){
-            String linea;
-            while(lector.hasNextLine() && (linea = lector.nextLine()) != null){
+            String linea = "";
+            while(lector.hasNextLine()){
+                linea = lector.nextLine();
                 String[] datos = linea.split("\\|");
-                PaqueteBase paquete = null;
-
-                //polimorfismo
-                if (datos[1].equals("Comida")){
-                    paquete = new PaqueteComida(Integer.parseInt(datos[0]),datos[1],datos[2],Double.parseDouble(datos[3]),datos[4]);
-                } else if (datos[1].equals("Encomienda")) {
-                    paquete = new PaqueteEncomienda(Integer.parseInt(datos[0]),datos[1],datos[2],Double.parseDouble(datos[3]),Integer.parseInt(datos[4]));
-                } else if (datos[1].equals("Express")) {
-                    paquete = new PaqueteExpress(Integer.parseInt(datos[0]),datos[1],datos[2],Double.parseDouble(datos[3]),datos[4]);
-                }
-                if (paquete != null){
-                    listaPaquetes.add(paquete);
+                switch (datos[0]){
+                    case "Comida":
+                        listaPaquetes.add(new PaqueteComida(datos[0],Integer.parseInt(datos[1]),datos[2],datos[3],Double.parseDouble(datos[4])));
+                        break;
+                    case "Encomienda":
+                        listaPaquetes.add(new PaqueteEncomienda(datos[0],Integer.parseInt(datos[1]),datos[2],datos[3],Double.parseDouble(datos[4])));
+                        break;
+                    case "Express":
+                        listaPaquetes.add(new PaqueteExpress(datos[0],Integer.parseInt(datos[1]),datos[2],datos[3],Double.parseDouble(datos[4])));
+                        break;
                 }
             }
         } catch (Exception e) {
             System.out.println("Error al cargar archivo");
         }
     }
+    public String filtrarTipo(){
+        String tipo = null;
 
-    public void mostrarHistorial(){
-        System.out.println("---EMPRESA DE REPARTO SPEEDFAST---");
-        for (PaqueteBase paquete : listaPaquetes){
-            paquete.mostrarResumen();
+        while (tipo == null){
+            System.out.println("\n---ESCOJA UNA OPCION DE PAQUETERIA---");
+            System.out.println("1.Comida");
+            System.out.println("2.Encomienda");
+            System.out.println("3.Express");
+
+            String entrada = sc.nextLine();
+
+            if (entrada.isEmpty()) {
+                System.out.println("Debes ingresar una opcion valida.");
+            } else {
+                try {
+                    int eleccion = Integer.parseInt(entrada);
+                    if (eleccion == 1) {
+                        tipo = "Comida";
+                    } else if (eleccion == 2) {
+                        tipo = "Encomienda";
+                    } else if (eleccion == 3) {
+                        tipo = "Express";
+                    } else {
+                        System.out.println("Debes ingresar una opcion valida.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Debes ingresar una opcion valida.");
+                }
+            }
         }
+        return tipo;
     }
 
-    public void filtrarTipo(){
-        String filtrado = null;
-        System.out.println("\n---ESCOJA UNA OPCION DE PAQUETERIA---");
-        System.out.println("1.Comida");
-        System.out.println("2.Encomienda");
-        System.out.println("3.Express");
-        int eleccion = sc.nextInt();
+    //DESACOPLAMIENTO
+    public void ingresarDespacho (PaqueteBase paqueteBase){
+        paqueteBase.despachar();
+        try (FileWriter escribe = new FileWriter("src/resources/Paquete.txt", true);
+             PrintWriter salida = new PrintWriter(escribe)) {
+             salida.println(paqueteBase.guardarResumen());
+        } catch (Exception e) {
+            System.out.println("Error al cargar archivo");
+        }
+    }
+    public void cancelarUltimoDespacho (Cancelable paqueteBase){
+        if (!listaPaquetes.isEmpty()) {
+            PaqueteBase paquete = listaPaquetes.get(listaPaquetes.size() - 1);
+            paquete.cancelar();
+            listaPaquetes.remove(listaPaquetes.size() - 1);
+            try {
+                ArrayList<String> lineas = new ArrayList<>();
+                Scanner lector = new Scanner(new File("src/resources/Paquete.txt"));
+                while (lector.hasNextLine()) { lineas.add(lector.nextLine());}
+                lector.close();
+                if (!lineas.isEmpty()) { lineas.remove(lineas.size() - 1);}
+                FileWriter escritor = new FileWriter("src/resources/Paquete.txt");
+                for (String linea : lineas) {
+                    escritor.write(linea + "\n");
+                }
+                escritor.close();
+            } catch (Exception e) {
+                System.out.println("Error al actualizar archivo");
+            }
+        }
+    }
+    public void relizarRastreamiento (Rastreable paqueteBase){ paqueteBase.verHistorial();}
 
-        if (eleccion == 1) {
-            filtrado = "COMIDA";
-        } else if (eleccion == 2) {
-            filtrado = "ENCOMIENDA";
-        } else if (eleccion == 3) {
-            filtrado = "EXPRESS";
-        } else {
-            System.out.println("Debes ingresar una opcion valida.");
+
+    //METODOS DE IMPRESION
+    public void imprimirDespachable(Scanner sc) {
+        PaqueteBase paqueteBase = null;
+        System.out.print("REGISTRAR PAQUETE PARA DESPACHO");
+        String tipo = filtrarTipo();
+
+        System.out.println("Ingrese el ID del paquete de 4 digitos: ");
+        String idTexto = sc.nextLine();
+        while (!idTexto.matches("\\d{4}")) {
+            System.out.println("El ID debe contener exactamente 4 digitos.");
+            System.out.println("Ingrese nuevamente el ID:");
+            idTexto = sc.nextLine();
+        }
+        int id = Integer.parseInt(idTexto);
+
+        System.out.println("Ingrese el nombre del repartidor: ");//podre usar aca la sobrecarga?
+        String nombre = sc.nextLine();
+        while (nombre.trim().isEmpty()) {
+            System.out.println("El nombre no puede estar vacio.");
+            System.out.println("Ingrese el nombre del repartidor:");
+            nombre = sc.nextLine();
         }
 
-        System.out.print("\n---FILTRADO: PAQUETERIA DE " + filtrado + "---");
+        System.out.println("Ingrese la direccion de entrega: ");
+        String direccion = sc.nextLine();
+        while (direccion.trim().isEmpty()) {
+            System.out.println("La direccion no puede estar vacia.");
+            System.out.println("Ingrese la direccion de entrega:");
+            direccion = sc.nextLine();
+        }
+
+        System.out.println("Ingrese distancia en km: ");
+        double distancia = 0;
+        while (true) {
+            try {
+                String entrada = sc.nextLine();
+                entrada = entrada.replace(",", ".");
+                distancia = Double.parseDouble(entrada);
+                if (distancia < 0) {
+                    System.out.println("La distancia no puede ser negativa.");
+                    System.out.println("Ingrese distancia en Km:");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar una distancia numerica.");
+                System.out.println("Ingrese distancia en Km:");
+            }
+        }
+
+        switch (tipo) {
+            case "Comida":
+                paqueteBase = new PaqueteComida("Comida", id, nombre, direccion, distancia);
+                break;
+            case "Encomienda":
+                paqueteBase = new PaqueteEncomienda("Encomienda", id, nombre, direccion, distancia);
+                break;
+            case "Express":
+                paqueteBase = new PaqueteExpress("Express", id, nombre, direccion, distancia);
+                break;
+            default:
+                System.out.println("Tipo de paquete no valido");
+                return;
+        }
+
+        listaPaquetes.add(paqueteBase);
+        ingresarDespacho(paqueteBase);
+        System.out.println("Paquete registrado correctamente");
+    }
+    
+    public void imprimirCancelable(){
+        System.out.println("CANCELAR EL ULTIMO PEDIDO");
+        cancelarUltimoDespacho(listaPaquetes.get(listaPaquetes.size() - 1));
+        System.out.print("------------------------------------------");
+        System.out.println("");
+    }
+    public void imrpimirRastreable(){
+        System.out.print("VER HISTORIAL");
+        for (PaqueteBase paqueteBase: listaPaquetes) {
+            relizarRastreamiento(paqueteBase);
+        }
+        System.out.println("");
+        System.out.print("------------------------------------------");
+        System.out.println("");
+    }
+    public void imprimirFiltro(){
+        String tipo = filtrarTipo().toUpperCase();
+        System.out.println("\n---FILTRADO: PAQUETERIA DE " + tipo + "---");
+        boolean encontrado = false;
         for (PaqueteBase p : listaPaquetes){
-            if(p.getTipoEntrega().equalsIgnoreCase(filtrado)){
+            if(p.getTipoEntrega().equalsIgnoreCase(tipo)){
                 p.mostrarResumen();
                 System.out.print("------------------------------------------");
+                encontrado = true;
             }
+        }
+        if(!encontrado){
+            System.out.println("No hay elementos");
         }
         System.out.println("");
     }
