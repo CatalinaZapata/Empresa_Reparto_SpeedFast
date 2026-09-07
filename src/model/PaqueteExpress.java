@@ -1,6 +1,6 @@
 package model;
 
-public class PaqueteExpress extends PaqueteBase {
+public class PaqueteExpress extends Paquete {
     public PaqueteExpress(String tipoEntrega, int idEntrega, String repartidor, String direccionEntrega, double distanciaKm) {
         super(tipoEntrega, idEntrega, repartidor, direccionEntrega, distanciaKm);
     }

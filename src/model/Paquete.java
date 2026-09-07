@@ -2,14 +2,14 @@ package model;
 
 import contrato.*;
 
-public abstract class PaqueteBase implements Despachable, Cancelable, Rastreable {
+public abstract class Paquete implements Despachable, Cancelable, Rastreable {
     protected String tipoEntrega;
     protected int idEntrega;
     protected String repartidor;
     protected String direccionEntrega;
     protected double distanciaKm;
 
-    public PaqueteBase(String tipoEntrega, int idEntrega, String repartidor, String direccionEntrega, double distanciaKm) {
+    public Paquete(String tipoEntrega, int idEntrega, String repartidor, String direccionEntrega, double distanciaKm) {
         this.tipoEntrega = tipoEntrega;
         this.idEntrega = idEntrega;
         this.repartidor = repartidor;
@@ -25,7 +25,7 @@ public abstract class PaqueteBase implements Despachable, Cancelable, Rastreable
     }
     public void mostrarResumen(){
         System.out.println("\nPedido tipo " + tipoEntrega + " #" + idEntrega);
-        asignarRepartidor();//tal vez si uso un if puedo hacer que escoja entre el met sobrecargado y sobrescrito y asi le doy algun uso a la sobrecarga...
+        asignarRepartidor();
         System.out.println("→ Direccion: " + direccionEntrega);
         System.out.println("→ Distancia: " + distanciaKm + "[km]");
         System.out.printf("→ Tiempo estimado de entrega: %.0f [min]%n", calcularTiempoEntrega());
@@ -47,5 +47,10 @@ public abstract class PaqueteBase implements Despachable, Cancelable, Rastreable
     @Override
     public void verHistorial(){
         System.out.print("\nPedido tipo " + tipoEntrega + " #" + idEntrega + " - Entregado por " + repartidor);
+    }
+
+    @Override
+    public String toString() {
+        return tipoEntrega + " #" + idEntrega;
     }
 }
