@@ -4,9 +4,12 @@ import contrato.*;
 import model.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class GestorPaqueteria {
-    ArrayList<PaqueteBase> listaPaquetes = new ArrayList<>();
+    ArrayList<Paquete> listaPaquetes = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
 
     public void cargarBuffer(){
@@ -63,9 +66,12 @@ public class GestorPaqueteria {
         }
         return tipo;
     }
+    public ArrayList<Paquete> getListaPaquetes() {
+        return listaPaquetes;
+    }
 
     //DESACOPLAMIENTO
-    public void ingresarDespacho (PaqueteBase paqueteBase){
+    public void ingresarDespacho (Paquete paqueteBase){
         paqueteBase.despachar();
         try (FileWriter escribe = new FileWriter("src/resources/Paquete.txt", true);
              PrintWriter salida = new PrintWriter(escribe)) {
@@ -76,7 +82,7 @@ public class GestorPaqueteria {
     }
     public void cancelarUltimoDespacho (Cancelable paqueteBase){
         if (!listaPaquetes.isEmpty()) {
-            PaqueteBase paquete = listaPaquetes.get(listaPaquetes.size() - 1);
+            Paquete paquete = listaPaquetes.get(listaPaquetes.size() - 1);
             paquete.cancelar();
             listaPaquetes.remove(listaPaquetes.size() - 1);
             try {
@@ -95,12 +101,11 @@ public class GestorPaqueteria {
             }
         }
     }
-    public void relizarRastreamiento (Rastreable paqueteBase){ paqueteBase.verHistorial();}
-
+    public void realizarRastreamiento(Rastreable paqueteBase){ paqueteBase.verHistorial();}
 
     //METODOS DE IMPRESION
     public void imprimirDespachable(Scanner sc) {
-        PaqueteBase paqueteBase = null;
+        Paquete paqueteBase = null;
         System.out.print("REGISTRAR PAQUETE PARA DESPACHO");
         String tipo = filtrarTipo();
 
@@ -113,13 +118,14 @@ public class GestorPaqueteria {
         }
         int id = Integer.parseInt(idTexto);
 
-        System.out.println("Ingrese el nombre del repartidor: ");//podre usar aca la sobrecarga?
+        System.out.println("Ingrese el nombre del repartidor: ");
         String nombre = sc.nextLine();
         while (nombre.trim().isEmpty()) {
             System.out.println("El nombre no puede estar vacio.");
             System.out.println("Ingrese el nombre del repartidor:");
-            nombre = sc.nextLine();
+            //nombre = sc.nextLine();
         }
+        paqueteBase.asignarRepartidor(nombre);
 
         System.out.println("Ingrese la direccion de entrega: ");
         String direccion = sc.nextLine();
@@ -167,17 +173,16 @@ public class GestorPaqueteria {
         ingresarDespacho(paqueteBase);
         System.out.println("Paquete registrado correctamente");
     }
-    
     public void imprimirCancelable(){
         System.out.println("CANCELAR EL ULTIMO PEDIDO");
         cancelarUltimoDespacho(listaPaquetes.get(listaPaquetes.size() - 1));
         System.out.print("------------------------------------------");
         System.out.println("");
     }
-    public void imrpimirRastreable(){
+    public void imprimirRastreable(){
         System.out.print("VER HISTORIAL");
-        for (PaqueteBase paqueteBase: listaPaquetes) {
-            relizarRastreamiento(paqueteBase);
+        for (Paquete paqueteBase: listaPaquetes) {
+            realizarRastreamiento(paqueteBase);
         }
         System.out.println("");
         System.out.print("------------------------------------------");
@@ -187,7 +192,7 @@ public class GestorPaqueteria {
         String tipo = filtrarTipo().toUpperCase();
         System.out.println("\n---FILTRADO: PAQUETERIA DE " + tipo + "---");
         boolean encontrado = false;
-        for (PaqueteBase p : listaPaquetes){
+        for (Paquete p : listaPaquetes){
             if(p.getTipoEntrega().equalsIgnoreCase(tipo)){
                 p.mostrarResumen();
                 System.out.print("------------------------------------------");
@@ -198,5 +203,44 @@ public class GestorPaqueteria {
             System.out.println("No hay elementos");
         }
         System.out.println("");
+    }
+    public void imprimirAsignarRepartidor(){
+
+        Repartidor repartidor1 = new Repartidor("Carlos");
+        Repartidor repartidor2 = new Repartidor("Ana");
+        Repartidor repartidor3 = new Repartidor("Pedro");
+
+        // Asignar paquetes al repartidor 1
+        repartidor1.asignarPaquetes(getListaPaquetes().get(0));
+        repartidor1.asignarPaquetes(getListaPaquetes().get(1));
+        repartidor1.asignarPaquetes(getListaPaquetes().get(2));
+
+        // Asignar paquetes al repartidor 2
+        repartidor2.asignarPaquetes(getListaPaquetes().get(3));
+        repartidor2.asignarPaquetes(getListaPaquetes().get(4));
+        repartidor2.asignarPaquetes(getListaPaquetes().get(5));
+
+        // Asignar paquetes al repartidor 3
+        repartidor3.asignarPaquetes(getListaPaquetes().get(6));
+        repartidor3.asignarPaquetes(getListaPaquetes().get(7));
+        repartidor3.asignarPaquetes(getListaPaquetes().get(8));
+
+        // Crear el grupo de hilos
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        // Ejecutar los repartidores
+        executor.submit(repartidor1);
+        executor.submit(repartidor2);
+        executor.submit(repartidor3);
+
+        // No aceptar nuevas tareas
+        executor.shutdown();
+
+        try {
+            executor.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("\nTodos los repartidores terminaron sus entregas.");
     }
 }
