@@ -10,7 +10,7 @@
 ## 📘 Descripción general del proyecto
 Este proyecto corresponde a la evaluación de la Semana 5 de Desarrollo Orientado a Objetos II, desarrollada en Java para la empresa SpeedFast.  
 El sistema simula la gestión concurrente de pedidos mediante múltiples repartidores que trabajan en paralelo.  
-Se implementan `Runnable`, `Thread` y mecanismos de sincronización para controlar el acceso seguro a la zona de carga compartida.  
+Se implementan `Runnable`, `Thread` y mecanismos de sincronización para controlar el acceso seguro a la zona de carga compartida.   
 Cada repartidor retira un pedido, lo cambia a `EN_REPARTO`, simula su entrega y finalmente lo marca como `ENTREGADO`.  
 El objetivo es evitar condiciones de carrera y asegurar que cada pedido sea procesado por un único repartidor.
 
